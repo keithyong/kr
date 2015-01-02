@@ -11,6 +11,8 @@ prints the last n lines. The program should behave rationally no matter how unre
 void printStrArr(char *lineptr[], int len);
 void enqueueLine(char *lineptr[], char *fresh, int nlines);
 int mygetline(char s[], int lim);
+void mystrcpy(char *s, char *t);
+void printStr(char * str);
 
 int main(int argc, char *argv[]) {
     int n = 10;
@@ -20,18 +22,27 @@ int main(int argc, char *argv[]) {
         else
             printf("Bad option!");
     }
-    char line[MAX_LINE];
-    char* tail[n];
-    int lineno = 0;
-    char hello = 'h';
 
-    while (mygetline(line, MAX_LINE) > 0)
-    {
+    char *tail[n];
+    char line[MAX_LINE];
+    char *p;
+    int lineno = 0;
+    int len;
+
+    while ((len = mygetline(line, MAX_LINE)) > 0) {
         if (lineno < n){
-            tail[lineno] = line;
-        }
-        else
+            if ((p = malloc(len)) == NULL) {
+                return -1;
+            } else {
+                mystrcpy(line, p);
+                tail[lineno] = p;
+                printf("sizeof(tail[%d]) = %lu\n", lineno, sizeof(tail[lineno]));
+                printf("sizeof(line) = %lu\n", sizeof(line));
+                printStr(line);
+            }
+        } else {
             enqueueLine(tail, line, n);
+        }
         printf("-----------------------\n");
         printStrArr(tail, n);
         lineno++;
@@ -49,10 +60,14 @@ void enqueueLine(char *lineptr[], char *fresh, int nlines) {
 void printStrArr(char *lineptr[], int len) {
     int i;
     for (i = 0; i < len; i++)
-        printf("%s", lineptr[i]);
-    putchar('\n');
+        printf("%s\n", lineptr[i]);
 }
 
+void printStr(char * str)
+{
+    for (; *str; str++)
+        putchar(*str);
+}
 int mygetline(char s[], int lim)
 {
     int c, i;
@@ -64,4 +79,14 @@ int mygetline(char s[], int lim)
     }
     s[i] = '\0';
     return i;
+}
+
+void mystrcpy(char *s, char *t)
+{
+    int i;
+    i = 0;
+    while ((*s = *t) != '\0') {
+        s++;
+        t++;
+    }
 }
