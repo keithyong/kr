@@ -24,6 +24,9 @@ int main()
         lineno++;
     }
     printStrArr(storage, lineno);
+    linebuf[0] = 'x';
+    printStrArr(storage, lineno);
+    char * p;
 }
 
 int mygetline(char s[], int lim)
